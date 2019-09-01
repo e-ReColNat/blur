@@ -20,7 +20,7 @@ def require_appkey(view_function):
            ip == APPKEYS[key]:
             return view_function(*args, **kwargs)
         else:
-            return jsonify({"message": "ERROR"}), status.HTTP_401_UNAUTHORIZED
+            return jsonify({"message": "UNAUTHORIZED"}), status.HTTP_401_UNAUTHORIZED
     return decorated_function
 
 # Define route to API
@@ -30,17 +30,17 @@ def handle_requests():
     if request.method == "POST":
         req = str(request.data.get("Data"))
         # Process POST request
-        if len(req):
-            return jsonify({"message": "OK"}), status.HTTP_200_OK
+        if len(req) and req != "None":
+            return jsonify({"req": req, "message": "OK"}), status.HTTP_200_OK
         else:
-            return jsonify({"message": "ERROR"}), status.HTTP_204_NO_CONTENT
+            return jsonify({"message": "NO_CONTENT"}), status.HTTP_204_NO_CONTENT
     else:
         req = str(request.data.get("Data"))
         # Process GET requests
-        if len(req):
-            return jsonify({"message": "OK"}), status.HTTP_200_OK
+        if len(req) and req != "None":
+            return jsonify({"req": req, "message": "OK"}), status.HTTP_200_OK
         else:
-            return jsonify({"message": "ERROR"}), status.HTTP_204_NO_CONTENT
+            return jsonify({"message": "NO_CONTENT"}), status.HTTP_204_NO_CONTENT
 
 if __name__ == "__main__":
     # Build app

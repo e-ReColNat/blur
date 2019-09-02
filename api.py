@@ -84,4 +84,4 @@ def handle_requests():
 
 if __name__ == "__main__":
     # Build app
-    app.run(debug=True)
+    app.run(debug=False, port=8000)

@@ -15,7 +15,7 @@ gunicorn -b 0.0.0.0:5000 api:app
 
 ## call api
 ```
-curl -H "Content-type: application/json" -H "Key: TEST_KEY" -X POST http://192.168.0.10:5000/api/ -d '{"Data": "test"}'
+curl -H "Content-type: application/json" -H "Key: TEST_KEY" -X POST http://127.0.0.1:5000/api/ -d '{"Data": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Illustration_Lupinus_luteus1.jpg", "Save_flag": "False"}'
 ```
 
 ## run UnitTests:

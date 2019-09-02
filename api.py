@@ -1,12 +1,22 @@
 from flask import request, abort, jsonify
 from flask_api import FlaskAPI, status
 from functools import wraps
-from urllib.parse import urlparse
+import re
+import requests
 
 from auths import APPKEYS
 
 # Build app
 app = FlaskAPI(__name__)
+
+# Django URL Check Regex
+url_regex = re.compile(
+        r'^(?:http|ftp)s?://' # http:// or https://
+        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|' #domain...
+        r'localhost|' #localhost...
+        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})' # ...or ip
+        r'(?::\d+)?' # optional port
+        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
 # AUTH decorator function
 def require_appkey(view_function):
@@ -15,32 +25,62 @@ def require_appkey(view_function):
     def decorated_function(*args, **kwargs):
         ip = request.remote_addr
         key = request.headers.get("Key")
-        if key and \
-           key in APPKEYS and \
-           ip == APPKEYS[key]:
+        if key and key in APPKEYS and ip == APPKEYS[key]:
             return view_function(*args, **kwargs)
-        else:
-            return jsonify({"message": "UNAUTHORIZED"}), status.HTTP_401_UNAUTHORIZED
+        elif not key or key not in APPKEYS:
+            return jsonify({"message": "UNAUTHORIZED KEY"}), \
+                    status.HTTP_401_UNAUTHORIZED
+        elif ip != APPKEYS[key]:
+            return jsonify({"message": "UNAUTHORIZED IP"}), \
+                    status.HTTP_401_UNAUTHORIZED
     return decorated_function
 
+def is_url_image(image_url):
+   image_formats = ("image/png", "image/jpeg", "image/jpg")
+   r = requests.head(image_url)
+   if r.headers["content-type"] in image_formats:
+      return True
+   return False
+
+def make_inference(url, save_flag):
+    # TODO############
+    is_success = True
+    result_url = ""
+    result_list = []
+    ##################
+    return is_success, result_url, result_list
+
 # Define route to API
-@app.route("/api/", methods=["GET", "POST"])
+@app.route("/api/", methods=["POST"])
 @require_appkey
 def handle_requests():
     if request.method == "POST":
-        req = str(request.data.get("Data"))
-        # Process POST request
-        if len(req) and req != "None":
-            return jsonify({"req": req, "message": "OK"}), status.HTTP_200_OK
+        # Read request's data
+        try:
+            url = str(request.data.get("Data"))
+        except ValueError:
+            url = ""
+        try:
+            save_flag = bool(request.data.get("Save_result"))
+        except ValueError:
+            save_flag = False
+        # Check if data is not empty and well formated
+        if len(url) and url != "None" and re.match(url_regex, url):
+            # Check if url actually points to an image
+            if is_url_image(url):
+                # Process image
+                is_success, result_url, result_list = make_inference(url, save_flag)
+            else:
+                return jsonify({"message": "BAD_CONTENT"}), \
+                        status.HTTP_204_NO_CONTENT
+            return jsonify({"message": "OK", \
+                            "succes": is_success, \
+                            "result_url": result_url, \
+                            "result_list": result_list}), \
+                            status.HTTP_200_OK
         else:
-            return jsonify({"message": "NO_CONTENT"}), status.HTTP_204_NO_CONTENT
-    else:
-        req = str(request.data.get("Data"))
-        # Process GET requests
-        if len(req) and req != "None":
-            return jsonify({"req": req, "message": "OK"}), status.HTTP_200_OK
-        else:
-            return jsonify({"message": "NO_CONTENT"}), status.HTTP_204_NO_CONTENT
+            return jsonify({"message": "NO_CONTENT"}), \
+                    status.HTTP_204_NO_CONTENT
 
 if __name__ == "__main__":
     # Build app

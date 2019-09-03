@@ -107,7 +107,7 @@ def test_post(client):
         "Key": "TEST_KEY"
     }
     data = {
-        "Data": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Illustration_Lupinus_luteus1.jpg",
+        "Data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
         "Save_result": False
     }
     url = "/api/"

@@ -5,6 +5,7 @@ import re
 import requests
 
 from auths import APPKEYS
+from Detector.reco_michel import detect_label 
 
 # Build app
 app = FlaskAPI(__name__)
@@ -42,13 +43,6 @@ def is_url_image(image_url):
       return True
    return False
 
-def make_inference(url, save_flag):
-    # TODO############
-    is_success = True
-    result_url = ""
-    result_list = []
-    ##################
-    return is_success, result_url, result_list
 
 # Define route to API
 @app.route("/api/", methods=["POST"])
@@ -60,21 +54,17 @@ def handle_requests():
             url = str(request.data.get("Data"))
         except ValueError:
             url = ""
-        try:
-            save_flag = bool(request.data.get("Save_result"))
-        except ValueError:
-            save_flag = False
         # Check if data is not empty and well formated
         if len(url) and url != "None" and re.match(url_regex, url):
             # Check if url actually points to an image
             if is_url_image(url):
                 # Process image
-                is_success, result_url, result_list = make_inference(url, save_flag)
+                result_url, result_list = detect_label(url)
+                # TODO process response
             else:
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
             return jsonify({"message": "OK", \
-                            "succes": is_success, \
                             "result_url": result_url, \
                             "result_list": result_list}), \
                             status.HTTP_200_OK

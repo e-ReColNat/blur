@@ -30,8 +30,7 @@ label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
-IMAGE_SIZE = (600, 800)
-
+IMAGE_SIZE = (550, 860)
 
 def load_image_into_numpy_array(image_path):
   # get image from url (parsed in Flask)
@@ -81,6 +80,39 @@ def run_inference_for_single_image(image, graph):
       output_dict['detection_scores'] = output_dict['detection_scores'][0]
   return output_dict
 
+def draw_and_save(image, image_url, output_dict, detection_data_final):
+  # draw detection zones with confidences
+  detect_img = np.array(image)
+  vis_util.visualize_boxes_and_labels_on_image_array(
+      detect_img,
+      output_dict['detection_boxes'],
+      output_dict['detection_classes'],
+      output_dict['detection_scores'],
+      category_index,
+      use_normalized_coordinates=True,
+      #min_score_thresh = threshold,
+      #max_boxes_to_draw=2,
+      skip_labels=True,
+      line_thickness=8)
+  detect_img = Image.fromarray(detect_img)
+  # Save images
+  image_name = image_url.split("/")[-1].split(".")[0]
+  image_path = os.path.join("results", image_name)
+  image.save(image_path + "_original.jpg")
+  detect_img.save(image_path + "_detect.jpg")
+  # blank zones
+  (im_width, im_height) = image.size
+  for zone in output_dict['detection_boxes']:
+    xy = [(zone[1] * im_width, zone[0] * im_height),
+          (zone[3] * im_width, zone[2] * im_height)]
+    drawer = ImageDraw.Draw(image)
+    drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
+  del drawer
+  image.save(image_path + "_censored.jpg")
+  # save detection data
+  with open(image_path + "_listbox.txt", 'w') as f:
+    print(detection_data_final, file=f)
+  return image_path
 
 def detect_label(image_url, threshold=0.65):
   # the array based representation of the image will be used later in order to prepare the
@@ -115,8 +147,13 @@ def detect_label(image_url, threshold=0.65):
   # sort scores and boxes accordingly
   indexes = list(range(len(output_dict['detection_scores'])))
   indexes.sort(key=output_dict['detection_scores'].__getitem__, reverse=True)
+  # filter over threshold
+  for i, idx in enumerate(indexes):
+    if output_dict['detection_scores'][idx] < threshold:
+      break
+  indexes = indexes[:i]
   output_dict['detection_scores'] = np.array(list(map(output_dict['detection_scores'].__getitem__, indexes)))
-  output_dict['detection_boxes'] = np.array(list(map(output_dict['detection_boxes'].__getitem__, indexes)))   
+  output_dict['detection_boxes'] = np.array(list(map(output_dict['detection_boxes'].__getitem__, indexes)))
 
   #DEBUT AJOUT MICHEL
   #On cree une copie de l'aray d'array d'origine. c'est a lui qu'on va rajouter des trucs
@@ -136,29 +173,8 @@ def detect_label(image_url, threshold=0.65):
     detection_data_final[i] = np.append(detection_data_tmp[i], output_dict['detection_scores'][i])
     detection_data_final[i] = detection_data_final[i].astype(np.float64)
   #FIN AJOUT MICHEL
-
-  final_img = np.array(image)
-  vis_util.visualize_boxes_and_labels_on_image_array(
-      final_img,
-      output_dict['detection_boxes'],
-      output_dict['detection_classes'],
-      output_dict['detection_scores'],
-      category_index,
-      use_normalized_coordinates=True,
-      #min_score_thresh = threshold,
-      #max_boxes_to_draw=2,
-      skip_labels=True,
-      line_thickness=8)
-  img = Image.fromarray(final_img)
-  # Save image
-  image_name = image_url.split("/")[-1].split(".")[0]
-  image_path = os.path.join("results", image_name)
-  image.save(image_path + "_original.jpg")
-  img.save(image_path + "_detect.jpg")
-  # save detection data
-  with open(image_path + "_listbox.txt", 'w') as f:
-    print(detection_data_final, file=f)
-  return image_path + "_detect.jpg"
+  image_path = draw_and_save(image, image_url, output_dict, detection_data_final)
+  return image_path + "_censored.jpg"
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:
@@ -170,4 +186,4 @@ if __name__ == "__main__":
   threshold = 0.65
   if len(sys.argv) > 2:
     threshold = sys.argv[2]
-  detect_label(image_url, threshold)
+  print(detect_label(image_url, threshold))

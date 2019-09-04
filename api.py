@@ -20,12 +20,13 @@ app.logger.setLevel(gunicorn_logger.level)
 APPKEYS = {}
 with open("auths.txt", mode="r") as f:
     for line in f:
-        key = line.split(":")[0]
-        ip = line.split(":")[1]
-        # remove "\n" if present
-        if ip[-1] == "\n":
-            ip = ip[:-1]
-        APPKEYS[key] = ip
+        if line[0] != "#":
+            key = line.split("#")[0].split(":")[0]
+            ip = line.split("#")[0].split(":")[1]
+            # remove "\n" if present
+            if ip[-1] == "\n":
+                ip = ip[:-1]
+            APPKEYS[key] = ip
 
 # Django URL Check Regex
 url_regex = re.compile(
@@ -83,7 +84,6 @@ def handle_requests():
                     return jsonify({"message": "DETECTOR_ERROR"}), \
                         status.HTTP_500_INTERNAL_SERVER_ERROR
                 app.logger.info("masked image %s" % url)
-                # TODO process response
             else:
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT

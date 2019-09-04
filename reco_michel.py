@@ -154,7 +154,6 @@ def detect_label(image_url, threshold=0.65):
   indexes = indexes[:i]
   output_dict['detection_scores'] = np.array(list(map(output_dict['detection_scores'].__getitem__, indexes)))
   output_dict['detection_boxes'] = np.array(list(map(output_dict['detection_boxes'].__getitem__, indexes)))
-
   #DEBUT AJOUT MICHEL
   #On cree une copie de l'aray d'array d'origine. c'est a lui qu'on va rajouter des trucs
   detection_data = deepcopy(output_dict['detection_boxes']) 
@@ -174,7 +173,7 @@ def detect_label(image_url, threshold=0.65):
     detection_data_final[i] = detection_data_final[i].astype(np.float64)
   #FIN AJOUT MICHEL
   image_path = draw_and_save(image, image_url, output_dict, detection_data_final)
-  return image_path + "_censored.jpg"
+  return image_path + "_censored.jpg", image_path + "_detect.jpg", image_path + "_listbox.txt"
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:

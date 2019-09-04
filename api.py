@@ -78,7 +78,7 @@ def handle_requests():
             if is_url_image(url):
                 # Process image
                 try:
-                    result_url = detect_label(url)
+                    sensored_img, detected_img, result_data = detect_label(url)
                 except:
                     app.logger.error("error processing image %s" % url)
                     return jsonify({"message": "DETECTOR_ERROR"}), \
@@ -88,7 +88,9 @@ def handle_requests():
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
             return jsonify({"message": "OK", \
-                            "result_url": result_url}), \
+                            "result_url": sensored_img, \
+                            "detected_url": detected_img, \
+                            "result_data": result_data}), \
                             status.HTTP_200_OK
         else:
             return jsonify({"message": "NO_CONTENT"}), \

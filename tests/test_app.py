@@ -20,7 +20,7 @@ def test_post_no_auth(client):
         "Key": ""
     }
     data = {
-        "Data": "test"
+        "data": "test"
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -34,7 +34,7 @@ def test_get_bad_key(client):
         "Key": "BAD_KEY"
     }
     data = {
-        "Data": "test"
+        "data": "test"
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -48,7 +48,7 @@ def test_get_bad_ip(client):
         "Key": "TEST_KEY2"
     }
     data = {
-        "Data": "test"
+        "data": "test"
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -62,7 +62,7 @@ def test_post_bad_data(client):
         "Key": "TEST_KEY"
     }
     data = {
-        "Data": "test",
+        "data": "test",
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -76,7 +76,7 @@ def test_post_empty_data(client):
         "Key": "TEST_KEY"
     }
     data = {
-        "Data": "",
+        "data": "",
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -90,7 +90,7 @@ def test_post_bad_url(client):
         "Key": "TEST_KEY"
     }
     data = {
-        "Data": "https://www.google.com",
+        "data": "https://www.google.com",
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -104,7 +104,7 @@ def test_post(client):
         "Key": "TEST_KEY"
     }
     data = {
-        "Data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
+        "data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)

@@ -69,16 +69,20 @@ def handle_requests():
     if request.method == "POST":
         # Read request's data
         try:
-            url = str(request.data.get("Data"))
+            url = str(request.data.get("data"))
         except ValueError:
             url = ""
+        try:
+            threshold = float(request.data.get("threshold"))
+        except ValueError:
+            threshold = 0.65
         # Check if data is not empty and well formated
         if len(url) and url != "None" and re.match(url_regex, url):
             # Check if url actually points to an image
             if is_url_image(url):
                 # Process image
                 try:
-                    sensored_img, detected_img, result_data = detect_label(url)
+                    sensored_img, detected_img, result_data = detect_label(url, threshold)
                 except:
                     app.logger.error("error processing image %s" % url)
                     return jsonify({"message": "DETECTOR_ERROR"}), \

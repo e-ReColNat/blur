@@ -7,7 +7,6 @@ import re
 import requests
 import logging
 
-from auths import APPKEYS
 from reco_michel import detect_label 
 
 # Build app
@@ -16,6 +15,17 @@ app = FlaskAPI(__name__)
 gunicorn_logger = logging.getLogger('gunicorn.error')
 app.logger.handlers = gunicorn_logger.handlers
 app.logger.setLevel(gunicorn_logger.level)
+
+# Read auths file
+APPKEYS = {}
+with open("auths.txt", mode="r") as f:
+    for line in f:
+        key = line.split(":")[0]
+        ip = line.split(":")[1]
+        # remove "\n" if present
+        if ip[-1] == "\n":
+            ip = ip[:-1]
+        APPKEYS[key] = ip
 
 # Django URL Check Regex
 url_regex = re.compile(
@@ -84,6 +94,6 @@ def handle_requests():
             return jsonify({"message": "NO_CONTENT"}), \
                     status.HTTP_204_NO_CONTENT
 
-if __name__ == "__main__":
+if __name__ == "__main__":            
     # Build app
     app.run(debug=False, port=8000)

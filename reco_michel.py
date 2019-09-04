@@ -129,7 +129,6 @@ def detect_label(image_url, threshold=0.65):
   detection_data_tmp = np.zeros((detection_data_size, 5))
   #tableau final des résultats
   detection_data_final = np.zeros((detection_data_size, 6)) 
-
   for i in range(detection_data_size):
     #on ajoute la classe au tableau
     detection_data_tmp[i] = np.append(detection_data[i], output_dict['detection_classes'][i])
@@ -152,7 +151,7 @@ def detect_label(image_url, threshold=0.65):
       line_thickness=8)
   img = Image.fromarray(final_img)
   # Save image
-  image_name = image_url.split("/")[-1].split(".j")[0]
+  image_name = image_url.split("/")[-1].split(".")[0]
   image_path = os.path.join("results", image_name)
   image.save(image_path + "_original.jpg")
   img.save(image_path + "_detect.jpg")
@@ -165,6 +164,10 @@ if __name__ == "__main__":
   if len(sys.argv) > 1:
     if len(sys.argv[1]) > 0:
       image_url = sys.argv[1]
+    else:
+      print("error: no url")
+      exit(-1)
+  threshold = 0.65
   if len(sys.argv) > 2:
     threshold = sys.argv[2]
   detect_label(image_url, threshold)

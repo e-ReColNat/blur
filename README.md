@@ -1,3 +1,5 @@
+Supported format:
+.png, .jpg, jpeg
 
 ## install
 ```

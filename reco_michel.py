@@ -2,7 +2,6 @@
 
 import os
 import sys
-import click
 import numpy as np
 from copy import deepcopy
 from PIL import Image, ImageDraw
@@ -11,12 +10,16 @@ import requests
 from random import shuffle
 
 import tensorflow as tf
+# shut tensorflow's mouth
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)  # or any {DEBUG, INFO, WARN, ERROR, FATAL}
+
 from modeles_mobile_ssd.utils import ops as utils_ops
 from modeles_mobile_ssd.utils import label_map_util
 from modeles_mobile_ssd.utils import visualization_utils as vis_util
 
 
-# What model to download.
+# models to use.
 MODELS = ['modeles_mobile_ssd/object_detection_ok_V1/scanetiq',
           'modeles_mobile_ssd/object_detection_ok_V2/scanetiq']
 
@@ -78,10 +81,8 @@ def run_inference_for_single_image(image, graph):
       output_dict['detection_scores'] = output_dict['detection_scores'][0]
   return output_dict
 
-@click.command()
-@click.argument("image_url")
-@click.option("-t", "threshold", default=0.65, help="Min score threshold, def: 0.65")
-def detect_label(image_url, threshold):
+
+def detect_label(image_url, threshold=0.65):
   # the array based representation of the image will be used later in order to prepare the
   # result image with boxes and labels on it.
   image, image_np = load_image_into_numpy_array(image_url)
@@ -158,7 +159,12 @@ def detect_label(image_url, threshold):
   # save detection data
   with open(image_path + "_listbox.txt", 'w') as f:
     print(detection_data_final, file=f)
-  return image_path + "_detect.jpg", detection_data_final
+  return image_path + "_detect.jpg"
 
 if __name__ == "__main__":
-  detect_label()
+  if len(sys.argv) > 1:
+    if len(sys.argv[1]) > 0:
+      image_url = sys.argv[1]
+  if len(sys.argv) > 2:
+    threshold = sys.argv[2]
+  detect_label(image_url, threshold)

@@ -1,14 +1,21 @@
+# coding: utf-8
+
 from flask import request, abort, jsonify
 from flask_api import FlaskAPI, status
 from functools import wraps
 import re
 import requests
+import logging
 
 from auths import APPKEYS
-from Detector.reco_michel import detect_label 
+from reco_michel import detect_label 
 
 # Build app
 app = FlaskAPI(__name__)
+
+gunicorn_logger = logging.getLogger('gunicorn.error')
+app.logger.handlers = gunicorn_logger.handlers
+app.logger.setLevel(gunicorn_logger.level)
 
 # Django URL Check Regex
 url_regex = re.compile(
@@ -59,14 +66,19 @@ def handle_requests():
             # Check if url actually points to an image
             if is_url_image(url):
                 # Process image
-                result_url, result_list = detect_label(url)
+                try:
+                    result_url = detect_label(url)
+                except:
+                    app.logger.error("error processing image %s" % url)
+                    return jsonify({"message": "DETECTOR_ERROR"}), \
+                        status.HTTP_500_INTERNAL_SERVER_ERROR
+                app.logger.info("masked image %s" % url)
                 # TODO process response
             else:
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
             return jsonify({"message": "OK", \
-                            "result_url": result_url, \
-                            "result_list": result_list}), \
+                            "result_url": result_url}), \
                             status.HTTP_200_OK
         else:
             return jsonify({"message": "NO_CONTENT"}), \

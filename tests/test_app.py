@@ -63,7 +63,6 @@ def test_post_bad_data(client):
     }
     data = {
         "Data": "test",
-        "Save_result": False
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -78,7 +77,6 @@ def test_post_empty_data(client):
     }
     data = {
         "Data": "",
-        "Save_result": True
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -93,7 +91,6 @@ def test_post_bad_url(client):
     }
     data = {
         "Data": "https://www.google.com",
-        "Save_result": False
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)
@@ -108,7 +105,6 @@ def test_post(client):
     }
     data = {
         "Data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
-        "Save_result": False
     }
     url = "/api/"
     response = client.post(url, data=json.dumps(data), headers=headers)

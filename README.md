@@ -8,16 +8,18 @@ source install.sh
 
 Installation is made in a VirtualEnv so use follwing command to manually activate the Env (mandatory to DEBUG/TEST):
 ```
-source ./env/bin/activate
+
 ```
 
 ## Run API:
 ```
 #DEBUG DETECTOR (DEBUG flag activated by default)
+source ./env/bin/activate
 python3 reco_michel.py http://mediaphoto.mnhn.fr/media/1441381633726ttCwJlmrl5PE83H3 0.3
 
 #DEBUG FLASK
-python3 api.py
+source ./env/bin/activate
+gunicorn api:app
 
 #PRODUCTION (auto start at boot)
 sudo service supervisor start

@@ -22,7 +22,7 @@ app.logger.setLevel(gunicorn_logger.level)
 APPKEYS = {}
 with open("auths.txt", mode="r") as f:
     for line in f:
-        if line[0] != "#":
+        if len(line) > 8 and ":" in line and line[0] != "#":
             key = line.split("#")[0].split(":")[0]
             ip = line.split("#")[0].split(":")[1]
             # remove "\n" if present
@@ -49,8 +49,6 @@ def require_appkey(view_function):
             ip = request.environ["REMOTE_ADDR"]
         else:
             ip = request.environ["HTTP_X_FORWARDED_FOR"]
-        #ip = request.remote_addr
-
         key = request.headers.get("Key")
         if key and key in APPKEYS and ip == APPKEYS[key]:
             return view_function(*args, **kwargs)

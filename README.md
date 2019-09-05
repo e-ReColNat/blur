@@ -5,11 +5,7 @@ Supported format:
 ```
 source install.sh
 ```
-
-Installation is made in a VirtualEnv so use follwing command to manually activate the Env (mandatory to DEBUG/TEST):
-```
-
-```
+Installation is made in a VirtualEnv so use "activate" command to manually activate the Env (mandatory to DEBUG/TEST)
 
 ## Run API:
 ```

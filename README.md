@@ -3,7 +3,7 @@ Supported format:
 
 ## Install
 ```
-sudo sh install.sh
+source install.sh
 ```
 
 Installation is made in a VirtualEnv so use follwing command to manually activate the Env (mandatory to DEBUG/TEST):
@@ -23,6 +23,7 @@ python3 api.py
 sudo service supervisor start
 sudo service supervisor restart
 sudo service supervisor stop
+sudo service supervisor status
 ```
 
 ## Authorize ip

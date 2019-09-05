@@ -40,3 +40,8 @@ curl -H "Content-type: application/json" -H "Key: API_KEY" -X POST http://detect
 ```
 python -m pytest --disable-warnings
 ```
+
+## Remove
+```
+rm -rf env
+```

@@ -3,6 +3,7 @@
 import os
 import sys
 import numpy as np
+import json
 from copy import deepcopy
 from PIL import Image, ImageDraw
 from io import BytesIO
@@ -109,9 +110,9 @@ def draw_and_save(image, image_url, output_dict, detection_data_final):
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
   del drawer
   image.save(image_path + "_censored.jpg")
-  # save detection data
-  with open(image_path + "_listbox.txt", 'w') as f:
-    print(detection_data_final, file=f)
+  # save data
+  with open(image_path + "_listbox.json", 'w') as f:
+    json.dump(detection_data_final, f)
   return image_path
 
 def detect_label(image_url, threshold=0.65):
@@ -154,24 +155,14 @@ def detect_label(image_url, threshold=0.65):
   indexes = indexes[:i]
   output_dict['detection_scores'] = np.array(list(map(output_dict['detection_scores'].__getitem__, indexes)))
   output_dict['detection_boxes'] = np.array(list(map(output_dict['detection_boxes'].__getitem__, indexes)))
-  #DEBUT AJOUT MICHEL
-  #On cree une copie de l'aray d'array d'origine. c'est a lui qu'on va rajouter des trucs
-  detection_data = deepcopy(output_dict['detection_boxes']) 
-  detection_data_size = len(detection_data)
-  #Je peut pas rajouter les deux valeurs d'un coup,
-  #et je peut pas le faire dans le mêem tableau
-  #(il ne peut pas avoir des arrays a 4 entrée et des arrays a 5 entrée en même temps, par exemple.)
-  #So, un tableau temporaire est utilisé
-  detection_data_tmp = np.zeros((detection_data_size, 5))
-  #tableau final des résultats
-  detection_data_final = np.zeros((detection_data_size, 6)) 
-  for i in range(detection_data_size):
-    #on ajoute la classe au tableau
-    detection_data_tmp[i] = np.append(detection_data[i], output_dict['detection_classes'][i])
-    #on ajoute le score au tableau
-    detection_data_final[i] = np.append(detection_data_tmp[i], output_dict['detection_scores'][i])
-    detection_data_final[i] = detection_data_final[i].astype(np.float64)
-  #FIN AJOUT MICHEL
+  # merge boxes data and confidence
+  detection_data_final = []
+  for i, score in enumerate(output_dict['detection_scores']):
+    box_data = {}
+    box_data[str(score)] = list(output_dict['detection_boxes'][i].astype(float))
+    detection_data_final.append(box_data)
+  print(detection_data_final)
+  # save images
   image_path = draw_and_save(image, image_url, output_dict, detection_data_final)
   return image_path + "_censored.jpg", image_path + "_detect.jpg", image_path + "_listbox.txt"
 

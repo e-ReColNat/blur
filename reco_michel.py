@@ -38,7 +38,15 @@ def load_image_into_numpy_array(image_path):
   # get image from url (parsed in Flask)
   res = requests.get(image_path)
   if res.status_code == 200:
-    image_orig = Image.open(BytesIO(res.content))
+    try:
+      image_orig = Image.open(BytesIO(res.content))
+    except:
+      print("error reading image")
+      exit(0)
+    # rotate if needed
+    (or_im_width, or_im_height) = image_orig.size
+    if or_im_width > or_im_height:
+      image_orig = image_orig.rotate(3*90, expand=True)    
     # resize img
     image = image_orig.resize(IMAGE_SIZE, resample=0)
     (im_width, im_height) = image.size
@@ -46,7 +54,8 @@ def load_image_into_numpy_array(image_path):
     img_arr = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
     return image_orig, img_arr
   else:
-    return None
+    print("error loading image")
+    exit(0)
 
 def run_inference_for_single_image(image, graph):
   with graph.as_default():
@@ -178,11 +187,11 @@ def detect_label(image_url, threshold=0.65, debug=False):
 if __name__ == "__main__":
   if len(sys.argv) > 1:
     if len(sys.argv[1]) > 0:
-      image_url = sys.argv[1]
+      image_url = str(sys.argv[1])
     else:
       print("error: no url")
       exit(-1)
   threshold = 0.65
   if len(sys.argv) > 2:
-    threshold = sys.argv[2]    
+    threshold = float(sys.argv[2])    
   print(detect_label(image_url, threshold=threshold, debug=True))

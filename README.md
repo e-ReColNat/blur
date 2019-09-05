@@ -5,6 +5,7 @@ Supported format:
 ```
 source install.sh
 ```
+You can safely ignore the red lines...
 Installation is made in a VirtualEnv so use "activate" command to manually activate the Env (mandatory to DEBUG/TEST)
 
 ## Run API:

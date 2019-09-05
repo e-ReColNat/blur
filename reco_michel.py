@@ -9,6 +9,7 @@ from PIL import Image, ImageDraw
 from io import BytesIO
 import requests
 from random import shuffle
+import logging
 
 import tensorflow as tf
 # shut tensorflow's mouth
@@ -81,7 +82,7 @@ def run_inference_for_single_image(image, graph):
       output_dict['detection_scores'] = output_dict['detection_scores'][0]
   return output_dict
 
-def draw_and_save(image, image_url, output_dict, detection_data_final):
+def draw_and_save(image, image_url, output_dict, detection_data_final, debug):
   # draw detection zones with confidences
   detect_img = np.array(image)
   vis_util.visualize_boxes_and_labels_on_image_array(
@@ -100,7 +101,8 @@ def draw_and_save(image, image_url, output_dict, detection_data_final):
   image_name = image_url.split("/")[-1].split(".")[0]
   image_path = os.path.join("results", image_name)
   image.save(image_path + "_original.jpg")
-  detect_img.save(image_path + "_detect.jpg")
+  if debug:
+    detect_img.save(image_path + "_detect.jpg")
   # blank zones
   (im_width, im_height) = image.size
   for zone in output_dict['detection_boxes']:
@@ -115,15 +117,19 @@ def draw_and_save(image, image_url, output_dict, detection_data_final):
     json.dump(detection_data_final, f)
   return image_path
 
-def detect_label(image_url, threshold=0.65):
+def detect_label(image_url, threshold=0.65, debug=False):
+  if debug:
+    logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
+    logging.info("Loading image")
   # the array based representation of the image will be used later in order to prepare the
   # result image with boxes and labels on it.
   image, image_np = load_image_into_numpy_array(image_url)
   # Expand dimensions since the model expects images to have shape: [1, None, None, 3]
   image_np_expanded = np.expand_dims(image_np, axis=0)
-
-  output_dict = {}
+  if debug:
+    logging.info("Loading models")
   # run inference on both models
+  output_dict = {}
   for model_name in MODELS:
     # Path to frozen detection graph. This is the actual model that is used for the object detection.
     path_to_ckpt = os.path.join(model_name, 'frozen_inference_graph.pb')
@@ -145,6 +151,8 @@ def detect_label(image_url, threshold=0.65):
             output_dict[key] = np.concatenate((output_dict[key], tmp_out[key]))
       else:
         output_dict[key] = tmp_out[key]
+  if debug:
+    logging.info("Saving data")
   # sort scores and boxes accordingly
   indexes = list(range(len(output_dict['detection_scores'])))
   indexes.sort(key=output_dict['detection_scores'].__getitem__, reverse=True)
@@ -161,9 +169,10 @@ def detect_label(image_url, threshold=0.65):
     box_data = {}
     box_data[str(score)] = list(output_dict['detection_boxes'][i].astype(float))
     detection_data_final.append(box_data)
-  print(detection_data_final)
+  if debug:
+    logging.info("Saving images")
   # save images
-  image_path = draw_and_save(image, image_url, output_dict, detection_data_final)
+  image_path = draw_and_save(image, image_url, output_dict, detection_data_final, debug)
   return image_path + "_censored.jpg", image_path + "_detect.jpg", image_path + "_listbox.txt"
 
 if __name__ == "__main__":
@@ -175,5 +184,5 @@ if __name__ == "__main__":
       exit(-1)
   threshold = 0.65
   if len(sys.argv) > 2:
-    threshold = sys.argv[2]
-  print(detect_label(image_url, threshold))
+    threshold = sys.argv[2]    
+  print(detect_label(image_url, threshold=threshold, debug=True))

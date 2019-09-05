@@ -1,26 +1,41 @@
 Supported format:
 .png, .jpg, jpeg
 
-## install
+## Install
 ```
-pip install -r requirements.txt
-```
-
-## run API:
-```
-#DEBUG
-python api.py
-
-#PROD
-gunicorn -b 0.0.0.0:8000 api:app
+sudo sh install.sh
 ```
 
-## call api
+Installation is made in a VirtualEnv so use follwing command to manually activate the Env (mandatory to DEBUG/TEST):
 ```
-curl -H "Content-type: application/json" -H "Key: TEST_KEY" -X POST http://127.0.0.1:8000/api/ -d '{"data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5", "threshold": 0.65}'
+source ./env/bin/activate
 ```
 
-## run UnitTests:
+## Run API:
+```
+#DEBUG DETECTOR (DEBUG flag activated by default)
+python3 reco_michel.py http://mediaphoto.mnhn.fr/media/1441381633726ttCwJlmrl5PE83H3 0.3
+
+#DEBUG FLASK
+python3 api.py
+
+#PRODUCTION (auto start at boot)
+sudo service supervisor start
+sudo service supervisor restart
+sudo service supervisor stop
+```
+
+## Authorize ip
+```
+echo "API_KEY:IP" >> auths.txt
+```
+
+## Call api (IP must have been authorized)
+```
+curl -H "Content-type: application/json" -H "Key: API_KEY" -X POST http://detectlabel.agoralogie.fr/api/ -d '{"data": "IMG_URL", "threshold": 0.65, "debug": "True"}'
+```
+
+## Run UnitTests:
 ```
 python -m pytest --disable-warnings
 ```

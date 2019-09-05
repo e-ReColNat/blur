@@ -9,6 +9,8 @@ import logging
 
 from reco_michel import detect_label 
 
+HOST = "http://detectlabel.agoralogie.fr/"
+
 # Build app
 app = FlaskAPI(__name__)
 
@@ -96,8 +98,8 @@ def handle_requests():
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
             return jsonify({"message": "OK", \
-                            "result_url": sensored_img, \
-                            "result_data": result_data}), \
+                            "result_image": HOST + sensored_img, \
+                            "result_data": HOST + result_data}), \
                             status.HTTP_200_OK
         else:
             return jsonify({"message": "NO_CONTENT"}), \

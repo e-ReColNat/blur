@@ -44,7 +44,11 @@ def require_appkey(view_function):
     @wraps(view_function)
     # the new, post-decoration function. Note *args and **kwargs here.
     def decorated_function(*args, **kwargs):
-        ip = request.remote_addr
+        # Necessary because of Nginx reverse proxy
+        if request.environ.get("HTTP_X_FORWARDED_FOR") is None:
+            ip = request.environ["REMOTE_ADDR"]
+        else:
+            ip = request.environ["HTTP_X_FORWARDED_FOR"]
         key = request.headers.get("Key")
         if key and key in APPKEYS and ip == APPKEYS[key]:
             return view_function(*args, **kwargs)

@@ -110,3 +110,33 @@ def test_post(client):
     response = client.post(url, data=json.dumps(data), headers=headers)
     assert response.content_type == mimetype
     assert response.status_code == 200
+
+def test_post_flag_confidence(client):
+    headers = {
+        "Content-Type": mimetype,
+        "Accept": mimetype,
+        "Key": "TEST_KEY"
+    }
+    data = {
+        "data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
+        "threshold": 0.85
+    }
+    url = "/api/"
+    response = client.post(url, data=json.dumps(data), headers=headers)
+    assert response.content_type == mimetype
+    assert response.status_code == 200
+
+def test_post_flag_debug(client):
+    headers = {
+        "Content-Type": mimetype,
+        "Accept": mimetype,
+        "Key": "TEST_KEY"
+    }
+    data = {
+        "data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
+        "debug": True
+    }
+    url = "/api/"
+    response = client.post(url, data=json.dumps(data), headers=headers)
+    assert response.content_type == mimetype
+    assert response.status_code == 200

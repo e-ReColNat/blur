@@ -70,15 +70,15 @@ def handle_requests():
         # Read request's data
         try:
             url = str(request.data.get("data"))
-        except ValueError:
+        except (ValueError, TypeError):
             url = ""
         try:
             threshold = float(request.data.get("threshold"))
-        except ValueError:
+        except (ValueError, TypeError):
             threshold = 0.65
         try:
             debug = bool(request.data.get("debug"))
-        except:
+        except (ValueError, TypeError):
             debug = False
         # Check if data is not empty and well formated
         if len(url) and url != "None" and re.match(url_regex, url):

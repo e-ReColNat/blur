@@ -41,5 +41,6 @@ python -m pytest --disable-warnings
 
 ## Remove
 ```
+deactivate
 rm -rf env
 ```

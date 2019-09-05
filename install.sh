@@ -1,8 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 sudo apt-get install python-setuptools nginx supervisor python3-pip python3-venv -y
 
 python3 -m venv env
-source ./env/bin/activate
+source ~/detect_label/env/bin/activate
 
 pip3 install -r requirements.txt
 

@@ -1,5 +1,5 @@
-tensorflow
 numpy
+tensorflow
 Pillow
 matplotlib
 flask

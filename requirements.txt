@@ -1,5 +1,7 @@
 tensorflow
 numpy
+Pillow
+matplotlib
 flask
 Flask_API
 requests

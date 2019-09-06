@@ -109,11 +109,6 @@ def handle_requests():
             return jsonify({"message": "NO_CONTENT"}), \
                     status.HTTP_204_NO_CONTENT
 
-@app.route("/results/")
-def protect():
-        return jsonify({"message": "FORBIDDEN"}), \
-               status.HTTP_403_FORBIDDEN
-
 if __name__ == "__main__":            
     # Build app
     app.run(debug=False, port=8000)

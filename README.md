@@ -33,7 +33,7 @@ echo "API_KEY:IP" >> auths.txt
 
 ## Call api (IP must have been authorized)
 ```
-curl -H "Content-type: application/json" -H "Key: API_KEY" -X POST http://detectlabel.agoralogie.fr/api/ -d '{"data": "IMG_URL", "threshold": 0.65, "debug": "True"}'
+curl http://detectlabel.agoralogie.fr/api/?key=[API_KEY]&source=[IMG_URL]&confidence=[THRESHOLD]&debug=[BOOL]
 ```
 
 ## Run UnitTests:

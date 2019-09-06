@@ -49,14 +49,15 @@ def require_appkey(view_function):
             ip = request.environ["REMOTE_ADDR"]
         else:
             ip = request.environ["HTTP_X_FORWARDED_FOR"]
-        key = request.headers.get("Key")
+        try:
+            key = str(request.args.get("key"))
+        except:
+            return jsonify({"message": "BAD_REQUEST"}), \
+                    status.HTTP_400_BAD_REQUEST
         if key and key in APPKEYS and ip == APPKEYS[key]:
             return view_function(*args, **kwargs)
-        elif not key or key not in APPKEYS:
-            return jsonify({"message": "UNAUTHORIZED KEY"}), \
-                    status.HTTP_401_UNAUTHORIZED
-        elif ip != APPKEYS[key]:
-            return jsonify({"message": "UNAUTHORIZED IP"}), \
+        elif not key or key not in APPKEYS or ip != APPKEYS[key]:
+            return jsonify({"message": "UNAUTHORIZED"}), \
                     status.HTTP_401_UNAUTHORIZED
     return decorated_function
 
@@ -69,21 +70,21 @@ def is_url_image(image_url):
 
 
 # Define route to API
-@app.route("/api/", methods=["POST"])
+@app.route("/api/", methods=["GET"])
 @require_appkey
 def handle_requests():
-    if request.method == "POST":
+    if request.method == "GET":
         # Read request's data
         try:
-            url = str(request.data.get("data"))
+            url = str(request.args.get("source"))
         except (ValueError, TypeError):
             url = ""
         try:
-            threshold = float(request.data.get("threshold"))
+            threshold = float(request.args.get("confidence"))
         except (ValueError, TypeError):
             threshold = 0.65
         try:
-            debug = bool(request.data.get("debug"))
+            debug = bool(request.args.get("debug"))
         except (ValueError, TypeError):
             debug = False
         # Check if data is not empty and well formated

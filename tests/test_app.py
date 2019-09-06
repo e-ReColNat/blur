@@ -8,135 +8,69 @@ def client():
     client = api.app.test_client()
     yield client
 
-mimetype = "application/json"
-
 # define tests bellow:
 
-# POST
-def test_post_no_auth(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": ""
-    }
-    data = {
-        "data": "test"
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_no_auth(client):
+    data = "test"
+    url = "/api/?source=%s" % (data)
+    response = client.get(url)
     assert response.status_code == 401
 
-def test_get_bad_key(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "BAD_KEY"
-    }
-    data = {
-        "data": "test"
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_bad_key(client):
+    key = "BAD_KEY"
+    data = "test"
+    url = "/api/?key=%s&source=%s" % (key, data)
+    response = client.get(url)
     assert response.status_code == 401
 
-def test_get_bad_ip(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY2"
-    }
-    data = {
-        "data": "test"
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_bad_ip(client):
+    key = "TEST_KEY2"
+    data = "test"
+    url = "/api/?key=%s&source=%s" % (key, data)
+    response = client.get(url)
     assert response.status_code == 401
 
-def test_post_bad_data(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY"
-    }
-    data = {
-        "data": "test",
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_bad_data(client):
+    key = "TEST_KEY"
+    data = "test"
+    url = "/api/?key=%s&source=%s" % (key, data)
+    response = client.get(url)
     assert response.status_code == 204
 
-def test_post_empty_data(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY"
-    }
-    data = {
-        "data": "",
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_empty_data(client):
+    key = "TEST_KEY"
+    data = ""
+    url = "/api/?key=%s&source=%s" % (key, data)
+    response = client.get(url)
     assert response.status_code == 204
 
-def test_post_bad_url(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY"
-    }
-    data = {
-        "data": "https://www.google.com",
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_bad_url(client):
+    key = "TEST_KEY"
+    data = "https://www.google.com"
+    url = "/api/?key=%s&source=%s" % (key, data)
+    response = client.get(url)
     assert response.status_code == 204
 
-def test_post(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY"
-    }
-    data = {
-        "data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_get(client):
+    key = "TEST_KEY"
+    data = "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5"
+    url = "/api/?key=%s&source=%s" % (key, data)
+    response = client.get(url)
     assert response.status_code == 200
 
-def test_post_flag_confidence(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY"
-    }
-    data = {
-        "data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
-        "threshold": 0.85
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_flag_confidence(client):
+    key = "TEST_KEY"
+    data = "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5"
+    threshold = "0.85"
+    url = "/api/?key=%s&source=%s&confidence=%s" % (key, data, threshold)
+    response = client.get(url)
     assert response.status_code == 200
 
-def test_post_flag_debug(client):
-    headers = {
-        "Content-Type": mimetype,
-        "Accept": mimetype,
-        "Key": "TEST_KEY"
-    }
-    data = {
-        "data": "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5",
-        "debug": True
-    }
-    url = "/api/"
-    response = client.post(url, data=json.dumps(data), headers=headers)
-    assert response.content_type == mimetype
+def test_flag_debug(client):
+    key = "TEST_KEY"
+    data = "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5"
+    threshold = "0.85"
+    debug = True
+    url = "/api/?key=%s&source=%s&confidence=%s&debug=%s" % (key, data, threshold, debug)
+    response = client.get(url)
     assert response.status_code == 200

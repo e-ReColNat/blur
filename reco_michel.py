@@ -91,7 +91,7 @@ def run_inference_for_single_image(image, graph):
       output_dict['detection_scores'] = output_dict['detection_scores'][0]
   return output_dict
 
-def draw_and_save(image, image_url, output_dict, detection_data_final, debug):
+def draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug):
   # draw detection zones with confidences
   detect_img = np.array(image)
   vis_util.visualize_boxes_and_labels_on_image_array(
@@ -101,7 +101,7 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, debug):
       output_dict['detection_scores'],
       category_index,
       use_normalized_coordinates=True,
-      #min_score_thresh = threshold,
+      min_score_thresh = threshold,
       #max_boxes_to_draw=2,
       skip_labels=True,
       line_thickness=8)
@@ -181,7 +181,7 @@ def detect_label(image_url, threshold=0.65, debug=False):
   if debug:
     logging.info("Saving images")
   # save images
-  image_path = draw_and_save(image, image_url, output_dict, detection_data_final, debug)
+  image_path = draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug)
   return image_path + "_censored.jpg", image_path + "_listbox.txt"
 
 if __name__ == "__main__":

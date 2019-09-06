@@ -182,7 +182,7 @@ def detect_label(image_url, threshold=0.65, debug=False):
     logging.info("Saving images")
   # save images
   image_path = draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug)
-  return image_path + "_censored.jpg", image_path + "_listbox.txt"
+  return image_path + "_censored.jpg", image_path + "_listbox.json"
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:

@@ -108,7 +108,7 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
   detect_img = Image.fromarray(detect_img)
   # Save images
   image_name = image_url.split("/")[-1].split(".")[0]
-  image_path = os.path.join("results", image_name)
+  image_path = os.path.join("/var/www/detect_label/results", image_name)
   image.save(image_path + "_original.jpg")
   if debug:
     detect_img.save(image_path + "_detect.jpg")

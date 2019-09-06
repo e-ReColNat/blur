@@ -12,3 +12,6 @@ sudo service supervisor restart
 sudo sh -c 'echo "server {\n    listen       80;\n    server_name  detectlabel.agoralogie.fr;\n\n    location /results/ {\n        autoindex off;\n        alias  /home/admindetect/detect_label/results/;\n    }\n\n    location / {\n        proxy_set_header        Host                    \$host;\n        proxy_set_header        X-Real-IP               \$remote_addr;\n        proxy_set_header        X-Forwarded-For         \$proxy_add_x_forwarded_for;\n        proxy_set_header        X-Forwarded-Proto       \$scheme;\n        proxy_pass http://127.0.0.1:8000;\n    }\n}" > /etc/nginx/conf.d/virtual.conf'
 sudo nginx -t
 sudo service nginx restart
+
+sudo mkdir /var/www/detect_label/results/
+sudo chown $USER /var/www/detect_label/results/

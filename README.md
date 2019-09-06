@@ -26,6 +26,7 @@ sudo service supervisor status
 ```
 
 ## Authorize ip
+(https://codepen.io/corenominal/pen/rxOmMJ)
 ```
 echo "API_KEY:IP" >> auths.txt
 ```

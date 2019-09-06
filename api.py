@@ -97,10 +97,10 @@ def handle_requests():
                     app.logger.error("error processing image %s" % url)
                     return jsonify({"message": "DETECTOR_ERROR"}), \
                         status.HTTP_500_INTERNAL_SERVER_ERROR
-                app.logger.info("masked image %s" % url)
             else:
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
+            app.logger.info("masked image %s" % url)
             return jsonify({"message": "OK", \
                             "result_image": HOST + sensored_img, \
                             "result_data": HOST + result_data}), \
@@ -108,6 +108,11 @@ def handle_requests():
         else:
             return jsonify({"message": "NO_CONTENT"}), \
                     status.HTTP_204_NO_CONTENT
+
+@app.route("/results/")
+def protect():
+        return jsonify({"message": "FORBIDDEN"}), \
+               status.HTTP_403_FORBIDDEN
 
 if __name__ == "__main__":            
     # Build app

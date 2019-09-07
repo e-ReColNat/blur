@@ -59,9 +59,6 @@ python -m pytest --disable-warnings
 
 ## Remove
 ```
-deactivate
-rm -r env
-sudo rm /etc/nginx/conf.d/virtual.conf
-sudo rm /etc/supervisor/conf.d/detect_label.conf
+source uninstall.sh
 ```
 "deactivate" command is to turn off the Python virtual env (if you see "(env)" at start of your shell's lines, you are in...)

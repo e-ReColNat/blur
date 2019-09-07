@@ -26,7 +26,7 @@ sudo service supervisor stop
 sudo service supervisor status
 ```
 with 	IMG_URL		: an accessible image url
-	CONFIDENCE 	: the confidence threshold (def to 0.65, mean that detection are drawn over 65% confidence only)
+	CONFIDENCE 	: the confidence threshold (def to 65, mean that detection are drawn over 65% confidence only)
 
 
 ## Authorize ip
@@ -44,7 +44,7 @@ curl http://detectlabel.agoralogie.fr/api/?key=API_KEY&source=IMG_URL&confidence
 ```
 with 	API_KEY 	: your private API_KEY (note that it is tied to your IP by host)
 	IMG_URL		: an accessible image url
-	CONFIDENCE 	: the confidence threshold (def to 0.65, mean that detection are drawn over 65% confidence only)
+	CONFIDENCE 	: the confidence threshold (def to 65, mean that detection are drawn over 65% confidence only)
 	DEBUG		: debug flag (to be defined)
 
 returns : {	"message":"OK",
@@ -64,4 +64,4 @@ rm -r env
 sudo rm /etc/nginx/conf.d/virtual.conf
 sudo rm /etc/supervisor/conf.d/detect_label.conf
 ```
-"deactivate" command is to turn off the Python virtual env (if you see "(env)" at start of your shell's lines...)
+"deactivate" command is to turn off the Python virtual env (if you see "(env)" at start of your shell's lines, you are in...)

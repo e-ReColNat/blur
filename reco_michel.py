@@ -94,6 +94,7 @@ def run_inference_for_single_image(image, graph):
 def draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug):
   image_name = image_url.split("/")[-1].split(".")[0]
   image_path = os.path.join("/var/www/detect_label/results", image_name)
+  results = {}
   if debug:
     # draw detection zones with confidences
     detect_img = np.array(image)
@@ -110,6 +111,9 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
         line_thickness=8)
     detect_img = Image.fromarray(detect_img)
     detect_img.save(image_path + "_detect.jpg")
+    results["detected_image"] = image_path + "_detect.jpg"
+    image.save(image_path + "_original.jpg")
+    results["original_image"] = image_path + "_original.jpg"
   # blank zones
   (im_width, im_height) = image.size
   for zone in output_dict['detection_boxes']:
@@ -118,15 +122,15 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     drawer = ImageDraw.Draw(image)
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
   del drawer
-  # Save images
-  #image.save(image_path + "_original.jpg")
   image.save(image_path + "_censored.jpg")
+  results["censored_image"] = image_path + "_censored.jpg"
   # save data
   with open(image_path + "_listbox.json", 'w') as f:
     json.dump(detection_data_final, f)
-  return image_path
+  results["result_data"] = image_path + "_listbox.json"
+  return results
 
-def detect_label(image_url, threshold=0.65, debug=False):
+def detect_label(image_url, threshold=65, debug=False):
   if debug:
     logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
     logging.info("Loading image")
@@ -167,6 +171,8 @@ def detect_label(image_url, threshold=0.65, debug=False):
   indexes.sort(key=output_dict['detection_scores'].__getitem__, reverse=True)
   # filter over threshold
   for i, idx in enumerate(indexes):
+    if threshold > 1 :
+      threshold /= 100
     if output_dict['detection_scores'][idx] < threshold:
       break
   indexes = indexes[:i]
@@ -181,8 +187,8 @@ def detect_label(image_url, threshold=0.65, debug=False):
   if debug:
     logging.info("Saving images")
   # save images
-  image_path = draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug)
-  return image_path + "_censored.jpg", image_path + "_listbox.json"
+  results = draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug)
+  return results
 
 if __name__ == "__main__":
   if len(sys.argv) > 1:
@@ -191,7 +197,7 @@ if __name__ == "__main__":
     else:
       print("error: no url")
       exit(-1)
-  threshold = 0.65
+  threshold = 65
   if len(sys.argv) > 2:
     threshold = float(sys.argv[2])    
   print(detect_label(image_url, threshold=threshold, debug=True))

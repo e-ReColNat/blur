@@ -81,8 +81,10 @@ def handle_requests():
             url = ""
         try:
             threshold = float(request.args.get("confidence"))
+            if threshold > 100 or threshold < 0:
+                raise ValueError
         except (ValueError, TypeError):
-            threshold = 0.65
+            threshold = 65
         try:
             debug = bool(request.args.get("debug"))
         except (ValueError, TypeError):
@@ -91,9 +93,9 @@ def handle_requests():
         if len(url) and url != "None" and re.match(url_regex, url):
             # Check if url actually points to an image
             if is_url_image(url):
-                # Process image
                 try:
-                    sensored_img, result_data = detect_label(url, threshold, debug)
+                    # Process image
+                    results = detect_label(url, threshold, debug)
                 except:
                     app.logger.error("error processing image %s" % url)
                     return jsonify({"message": "DETECTOR_ERROR"}), \
@@ -101,11 +103,10 @@ def handle_requests():
             else:
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
+            # send results
             app.logger.info("masked image %s" % url)
-            return jsonify({"message": "OK", \
-                            "result_image": HOST + sensored_img, \
-                            "result_data": HOST + result_data}), \
-                            status.HTTP_200_OK
+            results["message"]: "OK"
+            return jsonify(results), status.HTTP_200_OK
         else:
             return jsonify({"message": "NO_CONTENT"}), \
                     status.HTTP_204_NO_CONTENT

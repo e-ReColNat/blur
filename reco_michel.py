@@ -111,9 +111,9 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
         line_thickness=8)
     detect_img = Image.fromarray(detect_img)
     detect_img.save(image_path + "_detect.jpg")
-    results["detected_image"] = image_path + "_detect.jpg"
-    image.save(image_path + "_original.jpg")
-    results["original_image"] = image_path + "_original.jpg"
+    results["detected_image"] = image_name + "_detect.jpg"
+    image.save( + "_original.jpg")
+    results["original_image"] = image_name + "_original.jpg"
   # blank zones
   (im_width, im_height) = image.size
   for zone in output_dict['detection_boxes']:
@@ -123,11 +123,11 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
   del drawer
   image.save(image_path + "_censored.jpg")
-  results["censored_image"] = image_path + "_censored.jpg"
+  results["censored_image"] = image_name + "_censored.jpg"
   # save data
   with open(image_path + "_listbox.json", 'w') as f:
     json.dump(detection_data_final, f)
-  results["result_data"] = image_path + "_listbox.json"
+  results["result_data"] = image_name + "_listbox.json"
   return results
 
 def detect_label(image_url, threshold=65, debug=False):

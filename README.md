@@ -5,6 +5,7 @@ Supported format:
 ```
 source install.sh
 ```
+You can safely ignore the red lines...
 Installation is made in a Python VirtualEnv so you must use the "activate" command to manually activate the Env 
 (mandatory to DEBUG/TEST but automaticaly done by supervisor while in production)
 
@@ -44,7 +45,7 @@ curl http://detectlabel.agoralogie.fr/api/?key=API_KEY&source=IMG_URL&confidence
 with 	API_KEY 	: your private API_KEY (note that it is tied to your IP by host)
 	IMG_URL		: an accessible image url
 	CONFIDENCE 	: the confidence threshold (def to 65, mean that detection are drawn over 65% confidence only)
-	DEBUG		: debug flag (to be defined)
+	DEBUG		: debug flag (0 or 1) save and return original image and detected image
 
 returns : {	"message":"OK",
 		"result_data":"your_image_name_listbox.txt",

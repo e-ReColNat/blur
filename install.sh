@@ -1,6 +1,6 @@
 #!/bin/bash
 # system dep
-sudo apt-get install python-setuptools nginx supervisor python3-pip python3-venv -y
+sudo apt-get install python3-dev python3-setuptools python3-pip python3-venv nginx supervisor -y
 # build and activate virtual env
 python3 -m venv env
 source ~/detect_label/env/bin/activate

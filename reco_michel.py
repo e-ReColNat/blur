@@ -112,7 +112,7 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     detect_img = Image.fromarray(detect_img)
     detect_img.save(image_path + "_detect.jpg")
     results["detected_image"] = image_name + "_detect.jpg"
-    image.save( + "_original.jpg")
+    image.save(image_path + "_original.jpg")
     results["original_image"] = image_name + "_original.jpg"
   # blank zones
   (im_width, im_height) = image.size

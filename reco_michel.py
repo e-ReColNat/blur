@@ -92,25 +92,23 @@ def run_inference_for_single_image(image, graph):
   return output_dict
 
 def draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug):
-  # draw detection zones with confidences
-  detect_img = np.array(image)
-  vis_util.visualize_boxes_and_labels_on_image_array(
-      detect_img,
-      output_dict['detection_boxes'],
-      output_dict['detection_classes'],
-      output_dict['detection_scores'],
-      category_index,
-      use_normalized_coordinates=True,
-      min_score_thresh = threshold,
-      #max_boxes_to_draw=2,
-      skip_labels=True,
-      line_thickness=8)
-  detect_img = Image.fromarray(detect_img)
-  # Save images
   image_name = image_url.split("/")[-1].split(".")[0]
   image_path = os.path.join("/var/www/detect_label/results", image_name)
-  image.save(image_path + "_original.jpg")
   if debug:
+    # draw detection zones with confidences
+    detect_img = np.array(image)
+    vis_util.visualize_boxes_and_labels_on_image_array(
+        detect_img,
+        output_dict['detection_boxes'],
+        output_dict['detection_classes'],
+        output_dict['detection_scores'],
+        category_index,
+        use_normalized_coordinates=True,
+        min_score_thresh = threshold,
+        #max_boxes_to_draw=2,
+        skip_labels=True,
+        line_thickness=8)
+    detect_img = Image.fromarray(detect_img)
     detect_img.save(image_path + "_detect.jpg")
   # blank zones
   (im_width, im_height) = image.size
@@ -120,6 +118,8 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     drawer = ImageDraw.Draw(image)
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
   del drawer
+  # Save images
+  #image.save(image_path + "_original.jpg")
   image.save(image_path + "_censored.jpg")
   # save data
   with open(image_path + "_listbox.json", 'w') as f:

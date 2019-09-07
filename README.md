@@ -5,7 +5,6 @@ Supported format:
 ```
 source install.sh
 ```
-You can safely ignore the red lines...
 Installation is made in a Python VirtualEnv so you must use the "activate" command to manually activate the Env 
 (mandatory to DEBUG/TEST but automaticaly done by supervisor while in production)
 

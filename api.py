@@ -86,7 +86,7 @@ def handle_requests():
         except (ValueError, TypeError):
             threshold = 65
         try:
-            debug = bool(request.args.get("debug"))
+            debug = bool(int(request.args.get("debug")))
         except (ValueError, TypeError):
             debug = False
         # Check if data is not empty and well formated

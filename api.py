@@ -44,9 +44,9 @@ ip_regex = re.compile(r'\d{1,3}|\*\.\d{1,3}|\*\.\d{1,3}|\*\.\d{1,3}|\*')
 def check_ip(ip, ip_to_test):
     if not re.match(ip_regex, ip):
         return False
-    ip_truncated = "".join(ip.split("*")[0])
-    ip_to_test = ip_to_test[:len(ip_truncated)]
-    if ip_truncated == ip_to_test:
+    ip_truncated = "".join(ip_to_test.split("*")[0])
+    ip = [ip:len(ip_truncated)]
+    if ip_truncated == ip:
         return True
     return False
 

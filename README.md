@@ -37,6 +37,7 @@ echo "API_KEY:IP" >> auths.txt
 with 	API_KEY 	: your private API_KEY
 	IP		: your public IP
 Several IPs can be user wuth the same API_KEY, just add one line per IP
+You can use wildcards "*" at the end of the IP to allow a whole network/subnet
 
 
 ## Call api (IP must have been authorized)

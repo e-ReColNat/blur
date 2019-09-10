@@ -39,6 +39,17 @@ url_regex = re.compile(
         r'(?::\d+)?' # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
+ip_regex = re.compile(r'\d{1,3}|\*\.\d{1,3}|\*\.\d{1,3}|\*\.\d{1,3}|\*')
+
+def check_ip(ip, ip_to_test):
+    if not re.match(ip_regex, ip):
+        return False
+    ip_truncated = "".join(ip.split("*")[0])
+    ip_to_test = ip_to_test[:len(ip_truncated)]
+    if ip_truncated == ip_to_test:
+        return True
+    return False
+
 # AUTH decorator function
 def require_appkey(view_function):
     @wraps(view_function)
@@ -55,7 +66,7 @@ def require_appkey(view_function):
             return jsonify({"message": "BAD_REQUEST"}), \
                     status.HTTP_400_BAD_REQUEST
         for key_to_test in APPKEYS:
-            if key and key == key_to_test and ip == APPKEYS[key_to_test]:
+            if key and key == key_to_test and check_ip(ip, APPKEYS[key_to_test]):
                 return view_function(*args, **kwargs)
             else:
                 continue

@@ -114,7 +114,7 @@ def handle_requests():
             app.logger.info("masked image %s" % url)
             for result in results:
                 results[result] = HOST + "results/" + results[result]
-            results["message"]: "OK"
+            results["status"] = "OK"
             return jsonify(results), status.HTTP_200_OK
         else:
             return jsonify({"message": "NO_CONTENT"}), \

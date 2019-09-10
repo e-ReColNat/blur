@@ -39,7 +39,7 @@ url_regex = re.compile(
         r'(?::\d+)?' # optional port
         r'(?:/?|[/?]\S+)$', re.IGNORECASE)
 
-ip_regex = re.compile(r'\d{1,3}|\*\.\d{1,3}|\*\.\d{1,3}|\*\.\d{1,3}|\*')
+ip_regex = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}|\*\.\d{1,3}|\*')
 
 def check_ip(ip, ip_to_test):
     if not re.match(ip_regex, ip):

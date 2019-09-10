@@ -113,7 +113,10 @@ def handle_requests():
             # send results
             app.logger.info("masked image %s" % url)
             for result in results:
-                results[result] = HOST + "results/" + results[result]
+                try:
+                    results[result] = HOST + "results/" + results[result]
+                except TypeError:
+                    pass
             results["status"] = "OK"
             return jsonify(results), status.HTTP_200_OK
         else:

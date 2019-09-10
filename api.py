@@ -54,9 +54,12 @@ def require_appkey(view_function):
         except:
             return jsonify({"message": "BAD_REQUEST"}), \
                     status.HTTP_400_BAD_REQUEST
-        if key and key in APPKEYS and ip == APPKEYS[key]:
-            return view_function(*args, **kwargs)
-        elif not key or key not in APPKEYS or ip != APPKEYS[key]:
+
+        for key_to_test in APPKEYS:
+            if key and key == key_to_test and ip == APPKEYS[key_to_test]:
+                return view_function(*args, **kwargs)
+            else:
+                continue
             return jsonify({"message": "UNAUTHORIZED"}), \
                     status.HTTP_401_UNAUTHORIZED
     return decorated_function

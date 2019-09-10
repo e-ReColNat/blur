@@ -66,12 +66,12 @@ def require_appkey(view_function):
             return jsonify({"message": "BAD_REQUEST"}), \
                     status.HTTP_400_BAD_REQUEST
         for key_to_test in APPKEYS:
-            if key and key == key_to_test and ip == APPKEYS[key_to_test]:
+            if key and key == key_to_test and check_ip(ip, APPKEYS[key_to_test]):
                 return view_function(*args, **kwargs)
             else:
                 continue
-            return jsonify({"message": "UNAUTHORIZED"}), \
-                    status.HTTP_401_UNAUTHORIZED
+        return jsonify({"message": "UNAUTHORIZED"}), \
+                status.HTTP_401_UNAUTHORIZED
     return decorated_function
 
 def is_url_image(image_url):

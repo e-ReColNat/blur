@@ -129,7 +129,7 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
   del drawer
   image.save(image_path + "_censored.jpg")
-  if fileout:
+  if fileout or debug:
     results["censored_image"] = image_name + "_censored.jpg"
   return results
 

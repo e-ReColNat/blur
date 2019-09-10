@@ -36,6 +36,7 @@ echo "API_KEY:IP" >> auths.txt
 ```
 with 	API_KEY 	: your private API_KEY
 	IP		: your public IP
+Several IPs can be user wuth the same API_KEY, just add one line per IP
 
 
 ## Call api (IP must have been authorized)
@@ -45,11 +46,12 @@ curl http://detectlabel.agoralogie.fr/api/?key=API_KEY&source=IMG_URL&confidence
 with 	API_KEY 	: your private API_KEY (note that it is tied to your IP by host)
 	IMG_URL		: an accessible image url
 	CONFIDENCE 	: the confidence threshold (def to 65, mean that detection are drawn over 65% confidence only)
-	DEBUG		: debug flag (0 or 1) save and return original image and detected image
+	FILEOUT		: flag (0 or 1) to get the censored image url in return (default to 1)
+	DEBUG		: debug flag (0 or 1) save and return original image, masked image, boxes data and detected image (default to 0)
 
 returns : {	"message":"OK",
-		"result_data":"your_image_name_listbox.txt",
-		"result_image":"your_image_name_censored.jpg" }
+		"result_data": {Boxes data dict},
+		["result_image":"your_image_name_censored.jpg"] }
 
 
 ## Run UnitTests:
@@ -61,4 +63,3 @@ python -m pytest --disable-warnings
 ```
 source uninstall.sh
 ```
-"deactivate" command is to turn off the Python virtual env (if you see "(env)" at start of your shell's lines, you are in...)

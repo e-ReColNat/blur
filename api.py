@@ -90,7 +90,7 @@ def handle_requests():
             threshold = 65
         try:
             fileout = bool(int(request.args.get("fileout")))
-        except:
+        except (ValueError, TypeError):
             fileout = True
         try:
             debug = bool(int(request.args.get("debug")))

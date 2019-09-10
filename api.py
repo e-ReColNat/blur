@@ -89,6 +89,10 @@ def handle_requests():
         except (ValueError, TypeError):
             threshold = 65
         try:
+            fileout = bool(int(request.args.get("fileout")))
+        except:
+            fileout = True
+        try:
             debug = bool(int(request.args.get("debug")))
         except (ValueError, TypeError):
             debug = False
@@ -98,7 +102,7 @@ def handle_requests():
             if is_url_image(url):
                 try:
                     # Process image
-                    results = detect_label(url, threshold, debug)
+                    results = detect_label(url, threshold, fileout, debug)
                 except:
                     app.logger.error("error processing image %s" % url)
                     return jsonify({"message": "DETECTOR_ERROR"}), \

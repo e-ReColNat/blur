@@ -91,10 +91,13 @@ def run_inference_for_single_image(image, graph):
       output_dict['detection_scores'] = output_dict['detection_scores'][0]
   return output_dict
 
-def draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug):
+def draw_and_save(image, image_url, output_dict, detection_data_final, threshold, fileout, debug):
   image_name = image_url.split("/")[-1].split(".")[0]
   image_path = os.path.join("/var/www/detect_label/results", image_name)
   results = {}
+  # save data
+  results["detection_data"] = detection_data_final
+  detection_data_final
   if debug:
     # draw detection zones with confidences
     detect_img = np.array(image)
@@ -114,6 +117,9 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     results["detected_image"] = image_name + "_detect.jpg"
     image.save(image_path + "_original.jpg")
     results["original_image"] = image_name + "_original.jpg"
+    with open(image_path + "_listbox.json", 'w') as f:
+      json.dump(detection_data_final, f)
+    results["result_data"] = image_name + "_detection_data.json"
   # blank zones
   (im_width, im_height) = image.size
   for zone in output_dict['detection_boxes']:
@@ -123,14 +129,11 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
   del drawer
   image.save(image_path + "_censored.jpg")
-  results["censored_image"] = image_name + "_censored.jpg"
-  # save data
-  with open(image_path + "_listbox.json", 'w') as f:
-    json.dump(detection_data_final, f)
-  results["result_data"] = image_name + "_listbox.json"
+  if fileout:
+    results["censored_image"] = image_name + "_censored.jpg"
   return results
 
-def detect_label(image_url, threshold=65, debug=False):
+def detect_label(image_url, threshold=65, fileout=True, debug=False):
   if debug:
     logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
     logging.info("Loading image")
@@ -187,7 +190,7 @@ def detect_label(image_url, threshold=65, debug=False):
   if debug:
     logging.info("Saving images")
   # save images
-  results = draw_and_save(image, image_url, output_dict, detection_data_final, threshold, debug)
+  results = draw_and_save(image, image_url, output_dict, detection_data_final, threshold, fileout, debug)
   return results
 
 if __name__ == "__main__":
@@ -200,4 +203,4 @@ if __name__ == "__main__":
   threshold = 65
   if len(sys.argv) > 2:
     threshold = float(sys.argv[2])    
-  print(detect_label(image_url, threshold=threshold, debug=True))
+  print(detect_label(image_url, threshold=threshold, fileout=True, debug=True))

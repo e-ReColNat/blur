@@ -1,5 +1,5 @@
 # coding: utf-8
-
+import os
 from flask import request, abort, jsonify
 from flask_api import FlaskAPI, status
 from functools import wraps
@@ -22,8 +22,7 @@ app.logger.setLevel(gunicorn_logger.level)
 APPKEYS = {}
 if not os.path.exists("auths.txt"):
     app.logger.error("auths.txt file not found")
-    return jsonify({"message": "INTERNAL_SERVER_ERROR"}), \
-                status.HTTP_500_INTERNAL_SERVER_ERROR
+    exit(0)
 with open("auths.txt", mode="r") as f:
     for line in f:
         if len(line) > 8 and ":" in line and line[0] != "#":

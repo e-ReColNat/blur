@@ -121,7 +121,7 @@ def handle_requests():
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
             # send results
-            app.logger.info("masked image %s" % url)
+            app.logger.info("ip %s key %s masked image %s with threshold %f" % (ip, key, url, threshold))
             for result in results:
                 try:
                     results[result] = HOST + "results/" + results[result]

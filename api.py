@@ -20,6 +20,10 @@ app.logger.setLevel(gunicorn_logger.level)
 
 # Read auths file
 APPKEYS = {}
+if not os.path.exists("auths.txt"):
+    app.logger.error("auths.txt file not found")
+    return jsonify({"message": "INTERNAL_SERVER_ERROR"}), \
+                status.HTTP_500_INTERNAL_SERVER_ERROR
 with open("auths.txt", mode="r") as f:
     for line in f:
         if len(line) > 8 and ":" in line and line[0] != "#":

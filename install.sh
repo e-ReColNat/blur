@@ -7,10 +7,11 @@ source ~/detect_label/env/bin/activate
 # app dep
 pip3 install -r requirements.txt
 # supervisor and Nginx config files
-sudo sh -c 'echo "[program:detect_label]\ndirectory=/home/admindetect/detect_label\ncommand=/home/admindetect/detect_label/env/bin/gunicorn api:app -b localhost:8000\nautostart=true\nautorestart=true\nstderr_logfile=/var/log/detect_label/detect_label.err.log\nstdout_logfile=/var/log/detect_label/detect_label.out.log" > /etc/supervisor/conf.d/detect_label.conf'
+
+sudo cp detect_label.conf /etc/supervisor/conf.d/.
 sudo supervisorctl reread
 sudo service supervisor restart
-sudo sh -c 'echo "server {\n    listen       80;\n    server_name  detectlabel.agoralogie.fr;\n\n    location /results/ {\n        autoindex off;\n        alias  /var/www/detect_label/results/;\n    }\n\n    location / {\n        proxy_set_header        Host                    \$host;\n        proxy_set_header        X-Real-IP               \$remote_addr;\n        proxy_set_header        X-Forwarded-For         \$proxy_add_x_forwarded_for;\n        proxy_set_header        X-Forwarded-Proto       \$scheme;\n        proxy_pass http://127.0.0.1:8000;\n    }\n}" > /etc/nginx/conf.d/virtual.conf'
+sudo cp virtual.conf /etc/nginx/conf.d/.
 sudo nginx -t
 sudo service nginx restart
 # results folder

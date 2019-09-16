@@ -8,10 +8,9 @@ source ~/detect_label/env/bin/activate
 pip3 install -r requirements.txt
 # supervisor and Nginx config files
 
-sudo cp detect_label.conf /etc/supervisor/conf.d/.
+sudo pyhton3 set_configs.py
 sudo supervisorctl reread
 sudo service supervisor restart
-sudo cp virtual.conf /etc/nginx/conf.d/.
 sudo nginx -t
 sudo service nginx restart
 # results/log folder

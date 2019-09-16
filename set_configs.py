@@ -10,9 +10,9 @@ if __name__ == "__main__":
     # replace vars and write files
     with open("virtual.conf", mode="r") as nginx_conf:
         nginx_data = nginx_conf.read().replace("[HOSTNAME]", hostname)
-    with open("/etc/nginx/conf.d/virtual.conf", mode="r") as nginx_new_conf:
+    with open("/etc/nginx/conf.d/virtual.conf", mode="w") as nginx_new_conf:
         nginx_new_conf.write(nginx_data)
     with open ("detect_label.conf", mode="r") as supervisor_conf:
         supervisor_data = supervisor_conf.read().replace("[USERNAME]", local_path)
-    with open("/etc/supervisor/conf.d/detect_label.conf", mode="r") as supervisor_new_conf:
+    with open("/etc/supervisor/conf.d/detect_label.conf", mode="w") as supervisor_new_conf:
         supervisor_new_conf.write(supervisor_data)

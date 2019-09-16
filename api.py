@@ -9,8 +9,6 @@ import logging
 
 from reco_michel import detect_label 
 
-HOST = "http://detectlabel.agoralogie.fr/"
-
 # Build app
 app = FlaskAPI(__name__)
 
@@ -127,7 +125,7 @@ def handle_requests():
             app.logger.info("ip %s key %s masked image %s with threshold %f with fileout %s and debug %s" % (ip, key, url, threshold, fileout, debug))
             for result in results:
                 try:
-                    results[result] = HOST + "results/" + results[result]
+                    results[result] = request.host_url + "results/" + results[result]
                 except TypeError:
                     pass
             results["status"] = "OK"

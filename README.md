@@ -3,6 +3,7 @@ Supported format:
 
 ## Install
 ```
+sudo apt-get update
 source install.sh
 ```
 You can safely ignore the red lines...

@@ -24,7 +24,6 @@ from modeles_mobile_ssd.utils import visualization_utils as vis_util
 # models to use.
 MODELS = ['modeles_mobile_ssd/object_detection_ok_V1/scanetiq',
           'modeles_mobile_ssd/object_detection_ok_V2/scanetiq']
-
 graphes = []
 for model_name in MODELS:
     # Path to frozen detection graph. This is the actual model that is used for the object detection.

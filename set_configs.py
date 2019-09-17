@@ -2,7 +2,7 @@ import os
 
 if __name__ == "__main__":
     # get informations
-    hostname = input("#####################################\nPlease type the desired server name (space separated if more than one, ex:'www.my_site.com my_site.com'): \n")
+    hostname = input("\n#####################################\nPlease type the desired server name \n(space separated if more than one, ex:'www.my_site.com my_site.com'): \n")
     if len(hostname) == 0:
         print("Error : name is empty")
         exit(-1)

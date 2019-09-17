@@ -2,9 +2,8 @@
 # system dep
 sudo apt-get install python3-dev python3-setuptools python3-pip python3-venv nginx supervisor -y
 # check python/pip versions
-if python -c 'import sys; exit(1) if sys.version_info.major < 3 and sys.version_info.minor < 5 else exit(0)';
-then exit
-fi
+python -c 'import sys; exit(1) if sys.version_info.major < 3 and sys.version_info.minor < 5';
+
 # build and activate virtual env
 python3 -m venv env
 source ~/detect_label/env/bin/activate

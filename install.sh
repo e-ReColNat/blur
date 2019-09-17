@@ -11,7 +11,7 @@ source ~/detect_label/env/bin/activate
 pip3 install -r requirements.txt
 
 # supervisor and Nginx config files
-sudo python3 set_configs.py
+sudo python3 set_configs.py $1
 sudo supervisorctl reread
 sudo service supervisor restart
 sudo nginx -t

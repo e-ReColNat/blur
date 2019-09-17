@@ -1,12 +1,12 @@
-Supported format:
-.png, .jpg, jpeg
-
 ## Install
 ```
 sudo apt-get update
-source install.sh
+source install.sh [SERVER_NAME]
 ```
 You can safely ignore the red lines...
+
+SERVER_NAME can be provided as an argument or it will be asked durring installation.
+
 Installation is made in a Python VirtualEnv so you must use the "activate" command to manually activate the Env 
 (mandatory to DEBUG/TEST but automaticaly done by supervisor while in production)
 

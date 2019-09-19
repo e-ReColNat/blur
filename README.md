@@ -1,11 +1,18 @@
+## Requirements : 
+Python(>=3.5) 
+pip(>=9.0.1)
+
 ## Install
+(tested on Ubuntu 18.04.3, Ubuntu_server 18.04.3, Debian 10.1.0)
 ```
 sudo apt-get update
-source install.sh [SERVER_NAME]
+source install.sh [SERVERNAME]
 ```
 You can safely ignore the red lines...
 
-SERVER_NAME can be provided as an argument or it will be asked durring installation.
+SERVERNAME can be provided as an argument or it will be asked durring installation.
+(examples : "localhost" or "http://my_url.com http://www.my_url.com" or "143.21.178.46")
+Keep in mind that the address/name should be accessible from outside, otherwise you will experiment some 404 errors...
 
 Installation is made in a Python VirtualEnv so you must use the "activate" command to manually activate the Env 
 (mandatory to DEBUG/TEST but automaticaly done by supervisor while in production)
@@ -43,7 +50,10 @@ You can use wildcards "*" at the end of the IP to allow a whole network/subnet
 
 ## Call api (IP must have been authorized)
 ```
-curl http://detectlabel.agoralogie.fr/api/?key=API_KEY&source=IMG_URL&confidence=CONFIDENCE&debug=DEBUG
+curl http://[SERVERNAME]/api/?key=API_KEY&source=IMG_URL&confidence=CONFIDENCE&debug=DEBUG
+
+or from localhost:
+curl http://localhost:8000/api/?key=API_KEY&source=IMG_URL&confidence=CONFIDENCE&debug=DEBUG
 ```
 with 	API_KEY 	: your private API_KEY (note that it is tied to your IP by host)
 	IMG_URL		: an accessible image url

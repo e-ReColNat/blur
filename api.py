@@ -8,7 +8,7 @@ import re
 import requests
 import logging
 
-from reco_michel import detect_label 
+from reco_label import detect_label 
 
 # Build app
 app = FlaskAPI(__name__)

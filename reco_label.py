@@ -97,7 +97,7 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
     results["original_image"] = image_name + "_original.jpg"
     with open(image_path + "_listbox.json", 'w') as f:
       json.dump(detection_data_final, f)
-    results["result_data"] = image_name + "_detection_data.json"
+    results["result_data"] = image_name + "_listbox.json"
   # blank zones
   (im_width, im_height) = image.size
   for zone in output_dict['detection_boxes']:

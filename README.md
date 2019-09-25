@@ -2,15 +2,17 @@
 Python(>=3.5) 
 pip(>=9.0.1)
 
+## architecture
+![](arch.png)
+
 ## Install
-(tested on Ubuntu 18.04.3, Ubuntu_server 18.04.3, Debian 10.1.0)
 ```
 sudo apt-get update
 source install.sh [SERVERNAME]
 ```
 You can safely ignore the red lines...
 
-SERVERNAME can be provided as an argument or it will be asked durring installation.
+SERVERNAME can be provided as an argument or it will be asked during installation.
 (examples : "localhost" or "http://my_url.com http://www.my_url.com" or "143.21.178.46")
 Keep in mind that the address/name should be accessible from outside, otherwise you will experiment some 404 errors...
 
@@ -21,7 +23,7 @@ Installation is made in a Python VirtualEnv so you must use the "activate" comma
 ```
 #DEBUG DETECTOR (DEBUG flag activated by default)
 source ./env/bin/activate
-python3 reco_michel.py IMG_URL [CONFIDENCE]
+python3 reco_label.py IMG_URL [CONFIDENCE]
 
 #DEBUG FLASK
 source ./env/bin/activate
@@ -36,6 +38,19 @@ sudo service supervisor status
 with 	IMG_URL		: an accessible image url
 	CONFIDENCE 	: the confidence threshold (def to 65, mean that detection are drawn over 65% confidence only)
 
+## Scale
+Add --workers (set the number of workes instance) option to the detect_label.conf file, at the end of "command" line like following:
+```
+command=[USERNAME]/env/bin/gunicorn api:app -b localhost:8000 --workers=42
+```
+(before installing, in the surrent directory or after installed, in /etc/gunicorn/conf.d/detect_label.conf, then restart supervisor)
+
+## Diagnostic
+```
+sudo service nginx status
+sudo service supervisor status
+cat /var/log/detect_label/detect_label.err.log
+```
 
 ## Authorize ip
 (https://codepen.io/corenominal/pen/rxOmMJ)
@@ -71,7 +86,7 @@ returns : {	"message":"OK",
 python -m pytest --disable-warnings
 ```
 
-## Remove
+## Remove service
 ```
 source uninstall.sh
 ```

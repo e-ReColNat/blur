@@ -54,7 +54,7 @@ cat /var/log/detect_label/detect_label.err.log
 
 # Run UnitTests:
 ```
-python -m pytest --disable-warnings
+python3 -m pytest --disable-warnings
 ```
 
 # Authorize ip

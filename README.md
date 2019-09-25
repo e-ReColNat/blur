@@ -1,8 +1,8 @@
-## Requirements : 
+# Requirements : 
 Python(>=3.5) 
 pip(>=9.0.1)
 
-## architecture
+# Architecture
 ![](arch.png)
 
 ## Install
@@ -38,21 +38,26 @@ sudo service supervisor status
 with 	IMG_URL		: an accessible image url
 	CONFIDENCE 	: the confidence threshold (def to 65, mean that detection are drawn over 65% confidence only)
 
-## Scale
+# Scale
 Add --workers (set the number of workes instance) option to the detect_label.conf file, at the end of "command" line like following:
 ```
 command=[USERNAME]/env/bin/gunicorn api:app -b localhost:8000 --workers=42
 ```
 (before installing, in the surrent directory or after installed, in /etc/gunicorn/conf.d/detect_label.conf, then restart supervisor)
 
-## Diagnostic
+# Diagnostic
 ```
 sudo service nginx status
 sudo service supervisor status
 cat /var/log/detect_label/detect_label.err.log
 ```
 
-## Authorize ip
+# Run UnitTests:
+```
+python -m pytest --disable-warnings
+```
+
+# Authorize ip
 (https://codepen.io/corenominal/pen/rxOmMJ)
 ```
 echo "API_KEY:IP" >> auths.txt
@@ -79,12 +84,6 @@ with 	API_KEY 	: your private API_KEY (note that it is tied to your IP by host)
 returns : {	"message":"OK",
 		"result_data": {Boxes data dict},
 		["result_image":"your_image_name_censored.jpg"] }
-
-
-## Run UnitTests:
-```
-python -m pytest --disable-warnings
-```
 
 ## Remove service
 ```

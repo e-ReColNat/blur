@@ -69,8 +69,9 @@ def test_flag_confidence(client):
 def test_flag_debug(client):
     key = "TEST_KEY"
     data = "http://mediaphoto.mnhn.fr/media/1441305440248Dg5YP6C3kALFvbh5"
-    threshold = "0.85"
-    debug = True
-    url = "/api/?key=%s&source=%s&confidence=%s&debug=%s" % (key, data, threshold, debug)
+    threshold = 0.85
+    debug = 1
+    fileout = 1
+    url = "/api/?key=%s&source=%s&confidence=%s&fileout=%s&debug=%s" % (key, data, threshold, fileout, debug)
     response = client.get(url)
     assert response.status_code == 200

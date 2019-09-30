@@ -120,6 +120,7 @@ def handle_requests():
                     return jsonify({"message": "DETECTOR_ERROR"}), \
                         status.HTTP_500_INTERNAL_SERVER_ERROR
             else:
+                app.logger.info("BAD_CONTENT for ip" % ip)
                 return jsonify({"message": "BAD_CONTENT"}), \
                         status.HTTP_204_NO_CONTENT
             # send results
@@ -132,6 +133,7 @@ def handle_requests():
             results["status"] = "OK"
             return jsonify(results), status.HTTP_200_OK
         else:
+            app.logger.info("NO_CONTENT for ip" % ip)
             return jsonify({"message": "NO_CONTENT"}), \
                     status.HTTP_204_NO_CONTENT
 

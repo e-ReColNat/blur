@@ -107,7 +107,7 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
           (zone[3] * im_width, zone[2] * im_height)]
     drawer = ImageDraw.Draw(image)
     drawer.rectangle(xy, fill=0XFFFFFF, outline=None)
-  del drawer
+    del drawer
   image.save(image_path + "_censored.jpg")
   if fileout or debug:
     results["censored_image"] = image_name + "_censored.jpg"

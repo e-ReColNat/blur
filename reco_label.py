@@ -53,7 +53,8 @@ def load_image_into_numpy_array(image_path):
     try:
       image_orig = Image.open(BytesIO(res.content))
     except:
-      print("error reading image")
+      if debug:
+        logging.error("error reading image")
       exit(0)
     # rotate if needed
     (or_im_width, or_im_height) = image_orig.size
@@ -66,7 +67,8 @@ def load_image_into_numpy_array(image_path):
     img_arr = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)
     return image_orig, img_arr
   else:
-    print("error loading image")
+    if debug:
+        logging.error("error loading image")
     exit(0)
 
 def draw_and_save(image, image_url, output_dict, detection_data_final, threshold, fileout, debug):

@@ -179,7 +179,9 @@ def detect_label(image_url, threshold=65, fileout=True, debug=False):
   indexes.sort(key=output_dict['detection_scores'].__getitem__, reverse=True)
   # filter over threshold
   for i, idx in enumerate(indexes):
-    if threshold > 1 :
+    if debug:
+      threshold = 0.05
+    elif threshold > 1:
       threshold /= 100
     if output_dict['detection_scores'][idx] < threshold:
       break

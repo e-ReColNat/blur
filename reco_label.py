@@ -149,7 +149,6 @@ def run_inference_for_single_image(image, graph):
 
 def detect_label(image_url, threshold=65, fileout=True, debug=False):
   if debug:
-    threshold = 0.05
     logging.basicConfig(format='%(asctime)s %(message)s', level=logging.INFO)
     logging.info("Loading image")
   # the array based representation of the image will be used later in order to prepare the

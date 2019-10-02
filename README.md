@@ -70,10 +70,7 @@ You can use wildcards "*" at the end of the IP to allow a whole network/subnet
 
 ## Call api (IP must have been authorized)
 ```
-curl http://[SERVERNAME]/api/?key=API_KEY&source=IMG_URL&confidence=CONFIDENCE&debug=DEBUG
-
-or from localhost:
-curl http://localhost:8000/api/?key=API_KEY&source=IMG_URL&confidence=CONFIDENCE&debug=DEBUG
+curl http://[SERVERNAME]/api/?key=API_KEY&source=IMG_URL&confidence=CONFIDENCE&debug=DEBUG&fileout=FILEOUT
 ```
 with 	API_KEY 	: your private API_KEY (note that it is tied to your IP by host)
 	IMG_URL		: an accessible image url

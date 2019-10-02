@@ -5,7 +5,7 @@ import sys
 import numpy as np
 import json
 from copy import deepcopy
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageEnhance
 from io import BytesIO
 import requests
 from random import shuffle
@@ -44,7 +44,7 @@ label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
 categories = label_map_util.convert_label_map_to_categories(label_map, max_num_classes=NUM_CLASSES, use_display_name=True)
 category_index = label_map_util.create_category_index(categories)
 
-IMAGE_SIZE = (550, 860)
+IMAGE_SIZE = (720, 1280)
 
 def load_image_into_numpy_array(image_path):
   # get image from url (parsed in Flask)
@@ -61,7 +61,8 @@ def load_image_into_numpy_array(image_path):
     if or_im_width > or_im_height:
       image_orig = image_orig.rotate(3*90, expand=True)    
     # resize img
-    #image = image_orig.resize(IMAGE_SIZE, resample=0)
+    image = ImageEnhance.Contrast(image_orig).enhance(5.0)
+    image = image.resize(IMAGE_SIZE, resample=Image.BICUBIC)
     (im_width, im_height) = image.size
     # convert to np array
     img_arr = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)

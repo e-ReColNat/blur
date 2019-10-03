@@ -61,8 +61,8 @@ def load_image_into_numpy_array(image_path):
     if or_im_width > or_im_height:
       image_orig = image_orig.rotate(3*90, expand=True)    
     # resize img
-    image = ImageEnhance.Contrast(image_orig).enhance(5.0)
-    image = image.resize(IMAGE_SIZE, resample=Image.BICUBIC)
+    image = ImageEnhance.Contrast(image_orig).enhance(3.0)
+    image = image.resize(IMAGE_SIZE, resample=Image.LANCZOS)
     (im_width, im_height) = image.size
     # convert to np array
     img_arr = np.array(image.getdata()).reshape((im_height, im_width, 3)).astype(np.uint8)

@@ -52,6 +52,15 @@ sudo service supervisor status
 cat /var/log/detect_label/detect_label.err.log
 ```
 
+Results image and data can be accessed by urls.
+You can access to the results directory by editing nginx config file as following:
+```
+location /results/ {
+        autoindex on; 
+```
+on instead of off (default).
+Then restart nginx (sudo service nginx restart) and go to http://[SERVER_NAME]/results/
+
 # Run UnitTests:
 ```
 python3 -m pytest --disable-warnings

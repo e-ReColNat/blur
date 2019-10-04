@@ -195,7 +195,8 @@ def detect_label(image_url, threshold=65, fileout=True, debug=False):
     box_data = {}
     box_data[str(score)] = list(output_dict['detection_boxes'][i].astype(float))
     # bypass large detection boxes
-    if abs(box_data[str(score)][0] - box_data[str(score)][1]) < 0.25:
+    if abs(box_data[str(score)][0] - box_data[str(score)][2]) + \
+       abs(box_data[str(score)][1] - box_data[str(score)][3]) < 0.25:
         detection_data_final.append(box_data)
   if debug:
     logging.info("Saving images")

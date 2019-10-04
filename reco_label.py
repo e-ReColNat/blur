@@ -78,7 +78,6 @@ def draw_and_save(image, image_url, output_dict, detection_data_final, threshold
   results = {}
   # save data
   results["detection_data"] = detection_data_final
-  detection_data_final
   if debug:
     # draw detection zones with confidences
     detect_img = np.array(image)
@@ -187,17 +186,20 @@ def detect_label(image_url, threshold=65, fileout=True, debug=False):
     if output_dict['detection_scores'][idx] < threshold:
       break
   indexes = indexes[:i]
-  output_dict['detection_scores'] = np.array(list(map(output_dict['detection_scores'].__getitem__, indexes)))
-  output_dict['detection_boxes'] = np.array(list(map(output_dict['detection_boxes'].__getitem__, indexes)))
+  tmp_indexes = []
+  for idx in indexes:
+      if abs(output_dict["detection_boxes"][idx][0] - output_dict["detection_boxes"][idx][2]) + \
+         abs(output_dict["detection_boxes"][idx][1] - output_dict["detection_boxes"][idx][3]) < 1:
+            tmp_indexes.append(idx)
+  output_dict['detection_scores'] = np.array(list(map(output_dict['detection_scores'].__getitem__, tmp_indexes)))
+  output_dict['detection_boxes'] = np.array(list(map(output_dict['detection_boxes'].__getitem__, tmp_indexes)))
+  output_dict['detection_classes'] = np.array(list(map(output_dict['detection_classes'].__getitem__, tmp_indexes)))
   # merge boxes data and confidence
   detection_data_final = []
   for i, score in enumerate(output_dict['detection_scores']):
     box_data = {}
     box_data[str(score)] = list(output_dict['detection_boxes'][i].astype(float))
-    # bypass large detection boxes
-    if abs(box_data[str(score)][0] - box_data[str(score)][2]) + \
-       abs(box_data[str(score)][1] - box_data[str(score)][3]) < 0.25:
-        detection_data_final.append(box_data)
+    detection_data_final.append(box_data)
   if debug:
     logging.info("Saving images")
   # save images

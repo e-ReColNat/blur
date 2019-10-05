@@ -30,7 +30,10 @@ with open("auths.txt", mode="r") as f:
             # remove "\n" if present
             if ip[-1] == "\n":
                 ip = ip[:-1]
-            APPKEYS[key] = ip
+            if key in APPKEYS:
+                APPKEYS[key].append(ip)
+            else:
+                APPKEYS[key] = [ip]
 
 # Django URL Check Regex
 url_regex = re.compile(
@@ -68,10 +71,11 @@ def require_appkey(view_function):
             return jsonify({"message": "BAD_REQUEST"}), \
                     status.HTTP_400_BAD_REQUEST
         for key_to_test in APPKEYS:
-            if key and key == key_to_test and check_ip(ip, APPKEYS[key_to_test]):
-                return view_function(*args, **kwargs)
-            else:
-                continue
+            for i, ip in enumerate( APPKEYS[key_to_test]):
+                if key and key == key_to_test and check_ip(ip, APPKEYS[key_to_test][i]):
+                 return view_function(*args, **kwargs)
+                else:
+                    continue
         return jsonify({"message": "UNAUTHORIZED"}), \
                 status.HTTP_401_UNAUTHORIZED
     return decorated_function
